@@ -14,27 +14,36 @@ let player1 = document.querySelector('.player--1');
 
 let dice = document.querySelector('.dice');
 
+let scores, currentScore, activePlayer, playing;
 // change image when roll pressed
 
 // make a function when press new game button or someone win
 const init = () => {
+    scores = [0, 0];
+    currentScore = 0;
+    activePlayer = 0;
+    playing = true;
     score0.innerHTML = 0;
     score1.innerHTML = 0;
+    currentScore0.innerHTML = 0;
+    currentScore1.textContent = 0;
     dice.classList.add('hidden');
+    player0.classList.remove('player--winner');
+    player1.classList.remove('player--winner');
+    player0.classList.add('player--active');
+    player0.classList.add('player--active');
     playing = true;
 };
-let scores = [0, 0];
-let currentScore = 0;
-let activePalyer = 0;
-let playing = true;
+init();
+btnNew.addEventListener('click', init);
 
 const switchPlayer = () => {
-    activePalyer = activePalyer == 0 ? 1 : 0;
+    activePlayer = activePlayer == 0 ? 1 : 0;
     currentScore = 0;
     player0.classList.toggle('player--active');
     player1.classList.toggle('player--active');
+    document.getElementById(`current--${activePlayer}`).textContent = 0;
 };
-btnNew.addEventListener('click', init);
 
 const btnRolled = () => {
     console.log('hrllo');
@@ -49,9 +58,9 @@ const btnRolled = () => {
         if (number !== 1) {
             // add dice into current score
             currentScore += number;
-            document.querySelector(`#score--${activePalyer}`).innerHTML = number;
+            document.querySelector(`#score--${activePlayer}`).innerHTML = number;
             // for active player
-            document.querySelector(`#current--${activePalyer}`).textContent =
+            document.querySelector(`#current--${activePlayer}`).textContent =
                 currentScore;
             // currentScore0.textContent = currentScore;
         } else {
@@ -64,23 +73,24 @@ const btnRolled = () => {
 const holdScore = () => {
     console.log('you hold the score');
     // add currentscore to active player
-    scores[activePalyer] += currentScore;
-    // console.log(scores[activePalyer]);
-    document.querySelector(`#score--${activePalyer}`).innerHTML =
-        scores[activePalyer];
-    // document.querySelector(`#current--${activePalyer}`).textContent = scores[activePalyer];
+    scores[activePlayer] += currentScore;
+    // console.log(scores[activePlayer]);
+    document.querySelector(`#score--${activePlayer}`).innerHTML =
+        scores[activePlayer];
+    // document.querySelector(`#current--${activePlayer}`).textContent = scores[activePlayer];
     // check if player's score >=100
-    // finish the game
-    if (scores[activePalyer] >= 100) {
+
+    if (scores[activePlayer] >= 100) {
+        // finish the game
+
+        playing = false;
+        dice.classList.add('.hidden');
         document
-            .querySelector(`.player--${activePalyer}`)
+            .querySelector(`.player--${activePlayer}`)
             .classList.add('player--winner');
         document
-            .querySelector(`.player--${activePalyer}`)
+            .querySelector(`.player--${activePlayer}`)
             .classList.remove('player--active');
-        // document.querySelector(`.player--${activePalyer}`).textContent = 'Winner!'
-        playing = false;
-        init();
     }
     // seitchplayer
     switchPlayer();
